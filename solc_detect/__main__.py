@@ -8,19 +8,7 @@ Version of Solidity smart contract follow NPM versioning syntax.
 
 import argparse
 from semantic_version import NpmSpec, Version
-from . import parser
-
-# All Solidity releases: https://blog.soliditylang.org/category/releases/
-solidity_0_4 = ['0.4.%d' % i for i in range(27)]      # 0.4.0 --> 0.4.26
-solidity_0_5 = ['0.5.%d' % i for i in range(18)]      # 0.5.0 --> 0.5.17
-solidity_0_6 = ['0.6.%d' % i for i in range(13)]      # 0.6.0 --> 0.6.12
-solidity_0_7 = ['0.7.%d' % i for i in range(7)]       # 0.7.0 --> 0.7.6
-solidity_0_8 = ['0.8.%d' % i for i in range(19)]      # 0.8.0 --> 0.8.19
-all_solidity_versions = (solidity_0_4 +
-                         solidity_0_5 +
-                         solidity_0_6 +
-                         solidity_0_7 +
-                         solidity_0_8)
+from . import parser, solc_detect
 
 
 def configure_cli_arguments():
@@ -48,7 +36,7 @@ def configure_cli_arguments():
     return args
 
 
-def find_best_solidity_version(version):
+def find_best_solc_version(version):
     """Find the best Solidity version satisfying a version specification.
 
     The input string `version` follows NPM version specification format.
@@ -56,7 +44,7 @@ def find_best_solidity_version(version):
     This function returns the latest suitable Solidity version"""
 
     version_spec = NpmSpec(version)
-    all_versions = (Version(v) for v in all_solidity_versions)
+    all_versions = (Version(v) for v in solc_detect.all_solidity_versions)
     best_version = version_spec.select(all_versions)
     print("Best version: " + str(best_version))
 
@@ -65,10 +53,10 @@ def main():
     """Main function"""
     args = configure_cli_arguments()
 
-    version = parser.parse_solidity_version(args.input_file)
-    print("Input pragma version: " + version)
+    pragma_version = parser.parse_solidity_version(args.input_file)
+    print("Input pragma version: " + pragma_version)
 
-    find_best_solidity_version(version)
+    find_best_solc_version(pragma_version)
 
 
 if __name__ == "__main__":
