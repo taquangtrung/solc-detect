@@ -3,6 +3,6 @@
 with open('requirements.txt', 'r') as f:
     install_requires = f.read().splitlines()
 
-setuptools.setup(name='my_project',
-                 packages=['my_project'],
+setuptools.setup(name='solc_detect',
+                 packages=['solc_detect'],
                  install_requires=install_requires)
