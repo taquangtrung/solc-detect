@@ -15,10 +15,6 @@ all_solidity_versions = (solidity_0_4 +
                          solidity_0_8)
 
 
-def test_printing():
-    print("Running Solc-detect")
-
-
 def find_solc_version(input_file):
     """Find the best version of Solc compiler for a smart contract."""
     pragma_version = parser.parse_solidity_version(input_file)
