@@ -124,6 +124,7 @@ test3 = """
 
 transformer = ast_utils.create_transformer(this_module, ToAST())
 
+
 def parse_solidity_version(input_file):
     # read file to string
     with open(input_file, "r") as f:

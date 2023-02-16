@@ -8,7 +8,7 @@ Version of Solidity smart contract follow NPM versioning syntax.
 
 import argparse
 from semantic_version import NpmSpec, Version
-from . import parser, solc_detect
+from . import parser, lib
 
 
 def configure_cli_arguments():
@@ -36,27 +36,31 @@ def configure_cli_arguments():
     return args
 
 
-def find_best_solc_version(version):
-    """Find the best Solidity version satisfying a version specification.
+# def find_best_solc_version(version):
+#     """Find the best Solidity version satisfying a version specification.
 
-    The input string `version` follows NPM version specification format.
+#     The input string `version` follows NPM version specification format.
 
-    This function returns the latest suitable Solidity version"""
+#     This function returns the latest suitable Solidity version"""
 
-    version_spec = NpmSpec(version)
-    all_versions = (Version(v) for v in solc_detect.all_solidity_versions)
-    best_version = version_spec.select(all_versions)
-    print("Best version: " + str(best_version))
+#     version_spec = NpmSpec(version)
+#     all_versions = lib.init_all_solidity_versions()
+#     best_version = version_spec.select(all_versions)
+#     print("Best version: " + str(best_version))
 
 
 def main():
     """Main function"""
     args = configure_cli_arguments()
+    input_file = args.input_file
 
-    pragma_version = parser.parse_solidity_version(args.input_file)
-    print("Input pragma version: " + pragma_version)
+    pragma_version = lib.find_pragma_solc_version(input_file)
+    print("Input pragma version:", pragma_version)
 
-    find_best_solc_version(pragma_version)
+    best_version = lib.find_best_solc_version_for_pragma(pragma_version)
+    print("Best  version:", best_version)
+
+    return best_version
 
 
 if __name__ == "__main__":
