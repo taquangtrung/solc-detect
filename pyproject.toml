@@ -1,11 +1,7 @@
-[build-system]
-requires = ["setuptools>=61.0"]
-build-backend = "setuptools.build_meta"
-
 [project]
 name = "solc_detect"
 version = "0.0.1"
-authors = [{name="Ta Quang Trung", email="taquangtrungvn@gmail.com" },]
+authors = [{name="Ta Quang Trung"},]
 description = "A tool to detect Solidity compiler version required by smart contracts"
 dynamic = ["dependencies"]
 readme = "README.md"
@@ -20,5 +16,14 @@ classifiers = [
 "Homepage" = "https://github.com/sbip-sg/solc-detect"
 "Bug Tracker" = "https://github.com/sbip-sg/solc-detect/issues"
 
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+# Setuptools
 [tool.setuptools.dynamic]
 dependencies = {file = ["requirements.txt"]}
+
+# Code formatting
+[tool.black]
+line-length = 80
