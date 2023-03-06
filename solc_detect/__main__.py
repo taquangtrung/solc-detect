@@ -55,10 +55,10 @@ def main():
     input_file = args.input_file
 
     pragma_version = lib.find_pragma_solc_version(input_file)
-    print("Input pragma version:", pragma_version)
+    print("Detected pragmas:", pragma_version)
 
     best_version = lib.find_best_solc_version_for_pragma(pragma_version)
-    print("Best  version:", best_version)
+    print("Best version:", best_version)
 
     return best_version
 

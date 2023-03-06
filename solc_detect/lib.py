@@ -31,13 +31,14 @@ def init_all_solidity_versions():
 
 def find_pragma_solc_version(input_file):
     """Find the Solidity version declared in pragma of a smart contract."""
-    pragma_version = pragma_parser.parse_solidity_version(input_file)
-    return pragma_version
+    pragma_versions = pragma_parser.parse_solidity_version(input_file)
+    return pragma_versions
 
 
-def find_best_solc_version_for_pragma(pragma_version):
+def find_best_solc_version_for_pragma(pragma_versions):
     """Find the best version of Solc compiler for a pragma version."""
-    version_spec = NpmSpec(pragma_version)
+    combined_version = " ".join(pragma_versions)
+    version_spec = NpmSpec(combined_version)
     all_versions = init_all_solidity_versions()
     best_version = version_spec.select(all_versions)
     return best_version

@@ -1,13 +1,17 @@
 // Grammar to parse the `pragma` string of Solidity smart contracts.
 //
-// NOTE: use the prefix `_` to filter out rules/teminals from the parse tree.
+// NOTE:
+//   - rule: `_rule` means inlining this rule into in their containing rule.
+//   - terminal: `_TERM` means filter out this terminal
 
-source_unit: pragma_version other_source_unit_elements*
+source_unit: (solidity_pragma non_solidity_pragma?)*
 
-pragma_version: _PRAGMA _SOLIDITY semantic_version _SEMICOLON
-semantic_version: /[^;]+/
+solidity_pragma: _PRAGMA _SOLIDITY pragma_version_info _SEMICOLON
 
-other_source_unit_elements: /(.|\n|\r)+/s
+pragma_version_info: /[^;]+/
+
+// Rules and terminals cannot be used inside regular expression.
+non_solidity_pragma: /(((?!pragma *solidity).)|\n|\r)+/s
 
 _PRAGMA: "pragma"
 _SOLIDITY: "solidity"
