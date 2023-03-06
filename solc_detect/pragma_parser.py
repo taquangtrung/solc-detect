@@ -8,15 +8,20 @@ Syntax of Solidity version pragma follows NPM version syntax.
 - https://docs.npmjs.com/cli/v6/using-npm/semver
 """
 
+import os
 import sys
 from dataclasses import dataclass
+
 from lark import Lark, Transformer, ast_utils, v_args
 
-this_module = sys.modules[__name__]
+########################################
+# Constants
+
+PARSER_DIR = os.path.dirname(__file__)
+THIS_MODULE = sys.modules[__name__]
 
 ########################################
 # AST capturing pragma version
-#
 
 
 @dataclass
@@ -28,12 +33,14 @@ class _AST(ast_utils.Ast):
 @dataclass
 class PragmaVersion(_AST):
     """Class representing a pragma version"""
+
     version: str
 
 
 @dataclass
 class SourceUnit(_AST):
     """Class representing a source unit"""
+
     pragma_version: PragmaVersion
     other_source_unit_elements: str
 
@@ -45,6 +52,7 @@ class _DOT(_AST):
 
 class ToAST(Transformer):
     """Class to transform the parsed tree to AST tree"""
+
     @v_args(inline=True)
     def source_unit(self, pragma, _other_source_unit_elements):
         """Parse rule `source_unit`"""
@@ -69,66 +77,20 @@ class ToAST(Transformer):
 
 ########################################
 # Grammar to capture pragma version
-#
-
-
-# NOTE: use the prefix `_` to filter out rules/teminals from the parse tree.
-parser = Lark(
-    r"""
-    source_unit: pragma_version other_source_unit_elements*
-
-    pragma_version: _PRAGMA _SOLIDITY semantic_version _SEMICOLON
-    semantic_version: /[^;]+/
-
-    other_source_unit_elements: /(.|\n|\r)+/s
-
-    _PRAGMA: "pragma"
-    _SOLIDITY: "solidity"
-    _SEMICOLON: ";"
-
-    COMMENT: _COMMENT_LINE | _COMMENT_BLOCK
-    %ignore COMMENT
-
-    _COMMENT_LINE: _COMMENT_LINE_START /[^\n]*/ NEWLINE
-    _COMMENT_BLOCK: _COMMENT_BLOCK_START  /(((?!\*\/).)|\n|\r)+/ _COMMENT_BLOCK_END
-    _COMMENT_LINE_START: "//"
-    _COMMENT_BLOCK_START: "/*"
-    _COMMENT_BLOCK_END: "*/"
-
-    %import common.NEWLINE
-    %import common.WS
-    %ignore WS
-    """,
-    start="source_unit")
-
-
-# TODO: write unit tests
-test1 = """
-    // Some comments
-    pragma solidity 0.4.15;
-    // Some comments
-    """
-
-# TODO: write unit tests
-test2 = """
-    // Some comments
-    pragma solidity ^0.4.15;
-    """
-
-
-# TODO: write unit tests
-test3 = """
-    pragma solidity solidity 1.2 - 2.3.4;
-    // Some comments
-    """
-
-transformer = ast_utils.create_transformer(this_module, ToAST())
 
 
 def parse_solidity_version(input_file):
-    # read file to string
-    with open(input_file, "r") as f:
-        content = f.read()
+    """Parse pragma string in a Solidity source code."""
+    # Read grammar file
+    grammar_file = os.path.join(PARSER_DIR, "pragma_grammar.lark")
+    with open(grammar_file, "r", encoding="utf-8") as file:
+        grammar = file.read()
+        parser = Lark(grammar, start="source_unit")
+        transformer = ast_utils.create_transformer(THIS_MODULE, ToAST())
+
+    # Read file to string
+    with open(input_file, "r", encoding="utf-8") as file:
+        content = file.read()
         parsed_tree = parser.parse(content)
         source_unit = transformer.transform(parsed_tree)
         return source_unit.pragma_version.version

@@ -5,7 +5,8 @@ Module define some utility variables and functions.
 """
 
 from semantic_version import NpmSpec, Version
-from . import parser
+
+from . import pragma_parser
 
 
 def init_all_solidity_versions():
@@ -30,7 +31,7 @@ def init_all_solidity_versions():
 
 def find_pragma_solc_version(input_file):
     """Find the Solidity version declared in pragma of a smart contract."""
-    pragma_version = parser.parse_solidity_version(input_file)
+    pragma_version = pragma_parser.parse_solidity_version(input_file)
     return pragma_version
 
 

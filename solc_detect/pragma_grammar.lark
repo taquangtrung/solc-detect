@@ -1,0 +1,27 @@
+// Grammar to parse the `pragma` string of Solidity smart contracts.
+//
+// NOTE: use the prefix `_` to filter out rules/teminals from the parse tree.
+
+source_unit: pragma_version other_source_unit_elements*
+
+pragma_version: _PRAGMA _SOLIDITY semantic_version _SEMICOLON
+semantic_version: /[^;]+/
+
+other_source_unit_elements: /(.|\n|\r)+/s
+
+_PRAGMA: "pragma"
+_SOLIDITY: "solidity"
+_SEMICOLON: ";"
+
+COMMENT: _COMMENT_LINE | _COMMENT_BLOCK
+%ignore COMMENT
+
+_COMMENT_LINE: _COMMENT_LINE_START /[^\n]*/ NEWLINE
+_COMMENT_BLOCK: _COMMENT_BLOCK_START  /(((?!\*\/).)|\n|\r)+/ _COMMENT_BLOCK_END
+_COMMENT_LINE_START: "//"
+_COMMENT_BLOCK_START: "/*"
+_COMMENT_BLOCK_END: "*/"
+
+%import common.NEWLINE
+%import common.WS
+%ignore WS

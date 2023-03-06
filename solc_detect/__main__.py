@@ -7,28 +7,28 @@ Version of Solidity smart contract follow NPM versioning syntax.
 """
 
 import argparse
-from semantic_version import NpmSpec, Version
-from . import parser, lib
+
+from . import lib
 
 
 def configure_cli_arguments():
     """Main function to run solc-detect"""
     arg_parser = argparse.ArgumentParser(
         description="Detect Solidity compiler version for a smart contract",
-        add_help=False
+        add_help=False,
     )
 
     # Help
     arg_parser.add_argument(
-        "-h", "--help",
+        "-h",
+        "--help",
         action="help",
         default=argparse.SUPPRESS,
-        help="Show this help message and exit")
+        help="Show this help message and exit",
+    )
 
     # Input
-    arg_parser.add_argument(
-        "input_file",
-        help="Input smart contracts")
+    arg_parser.add_argument("input_file", help="Input smart contracts")
 
     # Parse CLI arguments
     args = arg_parser.parse_args()
