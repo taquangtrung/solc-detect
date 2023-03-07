@@ -90,24 +90,22 @@ class ASTTransformer(Transformer):
 ########################################
 # Parse Solidity `pragma`
 
+# Initialize grammar and parser
+grammar_file = os.path.join(PARSER_DIR, "pragma_grammar.lark")
+with open(grammar_file, "r", encoding="utf-8") as file:
+    grammar = file.read()
+parser = Lark(grammar, start="source_unit")
+
+
 def parse_solidity_version_from_content(content):
-    """Parse `pragma` string in a Solidity source code."""
-    # Read grammar file
-    grammar_file = os.path.join(PARSER_DIR, "pragma_grammar.lark")
-    with open(grammar_file, "r", encoding="utf-8") as file:
-        grammar = file.read()
-
-    parser = Lark(grammar, start="source_unit")
-    # transformer = ast_utils.create_transformer(THIS_MODULE, ToAST())
-
+    """Parse `pragma` string in a Solidity source code string."""
     parsed_tree = parser.parse(content)
     source_unit = ASTTransformer().transform(parsed_tree)
     return [pragma.version for pragma in source_unit.solidity_pragmas]
 
 
 def parse_solidity_version(input_file):
-    """Parse `pragma` string in a Solidity source code."""
-    # Read file to string
+    """Parse `pragma` string in a Solidity source code file."""
     with open(input_file, "r", encoding="utf-8") as file:
         content = file.read()
     return parse_solidity_version_from_content(content)
