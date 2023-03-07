@@ -1,12 +1,14 @@
 #!/usr/bin/env python3
 
 # Third Party
-import colored_traceback
+try:
+    import colored_traceback
+    # Enable coloring backtrace when printing to terminal
+    colored_traceback.add_hook()
+except ImportError:
+    pass
 
 from . import lib
-
-# Enable coloring backtrace when printing to terminal
-colored_traceback.add_hook()
 
 
 def find_pragma_solc_version(input_file):
