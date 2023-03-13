@@ -1,5 +1,8 @@
 #!/usr/bin/env python
 
-import setuptools
+from setuptools import setup
 
-setuptools.setup()
+setup(
+    name="smartbench-runner",
+    package_data={"": ["*.lark"]},
+)
