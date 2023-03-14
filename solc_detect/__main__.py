@@ -35,20 +35,6 @@ def configure_cli_arguments():
 
     return args
 
-
-# def find_best_solc_version(version):
-#     """Find the best Solidity version satisfying a version specification.
-
-#     The input string `version` follows NPM version specification format.
-
-#     This function returns the latest suitable Solidity version"""
-
-#     version_spec = NpmSpec(version)
-#     all_versions = lib.init_all_solidity_versions()
-#     best_version = version_spec.select(all_versions)
-#     print("Best version: " + str(best_version))
-
-
 def main():
     """Main function"""
     args = configure_cli_arguments()
