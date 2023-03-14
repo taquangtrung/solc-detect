@@ -4,7 +4,7 @@
 //   - rule: `_rule` means inlining this rule into in their containing rule.
 //   - terminal: `_TERM` means filter out this terminal
 
-source_unit: (solidity_pragma non_solidity_pragma?)*
+source_unit: (solidity_pragma? non_solidity_pragma?)*
 
 solidity_pragma: _PRAGMA _SOLIDITY pragma_version_info _SEMICOLON
 

@@ -1,11 +1,5 @@
-// SPDX-License-Identifier: UNLICENSED
+// pragma solidity ^0.4.15;
 
-pragma solidity ^0.4.15;
-
-/*
- * @source: SafeMath
- * @author: -
- */
 library SafeMath {
     function mul(uint256 a, uint256 b) internal constant returns (uint256) {
         uint256 c = a * b;

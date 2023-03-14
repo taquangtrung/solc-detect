@@ -1,9 +1,3 @@
-/*
- * @source: https://smartcontractsecurity.github.io/SWC-registry/docs/SWC-101#bectokensol
- * @author: -
- * @vulnerable_at_lines: 264
- */
-
 pragma solidity >0.6.0 <0.8.0;
 
 contract Contract1 {

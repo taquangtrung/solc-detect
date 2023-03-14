@@ -1,15 +1,10 @@
-/*
- * @source: https://smartcontractsecurity.github.io/SWC-registry/docs/SWC-101#bectokensol
- * @author: -
- * @vulnerable_at_lines: 264
- */
+// SPDX-License-Identifier: UNLICENSED
 
 pragma solidity 0.4.0 - 0.4.19;
 
 /*
- * @source: https://smartcontractsecurity.github.io/SWC-registry/docs/SWC-101#bectokensol
+ * @source: SafeMath
  * @author: -
- * @vulnerable_at_lines: 264
  */
 library SafeMath {
   function mul(uint256 a, uint256 b) internal constant returns (uint256) {
