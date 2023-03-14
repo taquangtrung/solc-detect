@@ -18,7 +18,7 @@ def init_all_solidity_versions():
     solidity_0_5 = ['0.5.%d' % i for i in range(18)]      # 0.5.0 --> 0.5.17
     solidity_0_6 = ['0.6.%d' % i for i in range(13)]      # 0.6.0 --> 0.6.12
     solidity_0_7 = ['0.7.%d' % i for i in range(7)]       # 0.7.0 --> 0.7.6
-    solidity_0_8 = ['0.8.%d' % i for i in range(19)]      # 0.8.0 --> 0.8.19
+    solidity_0_8 = ['0.8.%d' % i for i in range(20)]      # 0.8.0 --> 0.8.19
 
     all_versions = (solidity_0_4 +
                     solidity_0_5 +
