@@ -20,7 +20,7 @@ def configure_cli_arguments():
 
     # Help
     arg_parser.add_argument(
-        "--print-result-only",
+        "--verbal",
         action="store_true",
         default=False,
         help="",
@@ -50,14 +50,14 @@ def main():
     input_file = args.input_file
 
     pragma_version = lib.find_pragma_solc_version(input_file)
-    if not args.print_result_only:
+    if args.verbal:
         print("Detected pragmas:", pragma_version)
 
     best_version = lib.find_best_solc_version_for_pragma(pragma_version)
-    if args.print_result_only:
-        print(best_version)
-    else:
+    if args.verbal:
         print("Best version:", best_version)
+    else:
+        print(best_version)
 
 
 if __name__ == "__main__":
