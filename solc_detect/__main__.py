@@ -20,6 +20,14 @@ def configure_cli_arguments():
 
     # Help
     arg_parser.add_argument(
+        "--print-result-only",
+        action="store_true",
+        default=False,
+        help="",
+    )
+
+    # Help
+    arg_parser.add_argument(
         "-h",
         "--help",
         action="help",
@@ -35,18 +43,21 @@ def configure_cli_arguments():
 
     return args
 
+
 def main():
     """Main function"""
     args = configure_cli_arguments()
     input_file = args.input_file
 
     pragma_version = lib.find_pragma_solc_version(input_file)
-    print("Detected pragmas:", pragma_version)
+    if not args.print_result_only:
+        print("Detected pragmas:", pragma_version)
 
     best_version = lib.find_best_solc_version_for_pragma(pragma_version)
-    print("Best version:", best_version)
-
-    return best_version
+    if args.print_result_only:
+        print(best_version)
+    else:
+        print("Best version:", best_version)
 
 
 if __name__ == "__main__":
