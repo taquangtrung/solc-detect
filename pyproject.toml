@@ -1,6 +1,6 @@
 [project]
 name = "solc_detect"
-version = "0.0.5"
+version = "0.0.6"
 authors = [{name="Ta Quang Trung"},]
 description = "A tool to detect Solidity compiler version required by smart contracts"
 dynamic = ["dependencies"]

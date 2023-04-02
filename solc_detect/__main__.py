@@ -8,6 +8,10 @@ Version of Solidity smart contract follow NPM versioning syntax.
 
 import argparse
 
+import toml
+
+import solc_detect
+
 from . import lib
 
 
@@ -18,9 +22,19 @@ def configure_cli_arguments():
         add_help=False,
     )
 
-    # Help
+    # Print version
     arg_parser.add_argument(
-        "--verbal",
+        "-V",
+        "--version",
+        action="store_true",
+        default=False,
+        help="",
+    )
+
+    # Print verbose
+    arg_parser.add_argument(
+        "-v",
+        "--verbose",
         action="store_true",
         default=False,
         help="",
@@ -36,25 +50,37 @@ def configure_cli_arguments():
     )
 
     # Input
-    arg_parser.add_argument("input_file", help="Input smart contracts")
+    arg_parser.add_argument(
+        "input_file", nargs="?", help="Input smart contracts"
+    )
 
     # Parse CLI arguments
     args = arg_parser.parse_args()
 
-    return args
+    return (args, arg_parser)
 
 
 def main():
     """Main function"""
-    args = configure_cli_arguments()
+    (args, arg_parser) = configure_cli_arguments()
+
+    if args.version:
+        app_version = toml.load("pyproject.toml")["project"]["version"]
+        print(f"solc-detect v{app_version}")
+        arg_parser.exit()
+
     input_file = args.input_file
+    if input_file is None:
+        print("Error: input Solidity file is not provided!\n")
+        arg_parser.print_usage()
+        arg_parser.exit()
 
     pragma_version = lib.find_pragma_solc_version(input_file)
-    if args.verbal:
+    if args.verbose:
         print("Detected pragmas:", pragma_version)
 
     best_version = lib.find_best_solc_version_for_pragma(pragma_version)
-    if args.verbal:
+    if args.verbose:
         print("Best version:", best_version)
     else:
         print(best_version)
