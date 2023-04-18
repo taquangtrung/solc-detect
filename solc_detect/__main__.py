@@ -29,10 +29,10 @@ def configure_cli_arguments():
         help="",
     )
 
-    # Print verbose
+    # Quiet mode, print only the best version.
     arg_parser.add_argument(
-        "-v",
-        "--verbose",
+        "-q",
+        "--quiet",
         action="store_true",
         default=False,
         help="",
@@ -74,11 +74,11 @@ def main():
         arg_parser.exit()
 
     pragma_version = solc_detect.find_pragma_solc_version(input_file)
-    if args.verbose:
+    if not args.quiet:
         print("Detected pragmas:", pragma_version)
 
     best_version = solc_detect.find_best_solc_version_for_pragma(pragma_version)
-    if args.verbose:
+    if not args.quiet:
         print("Best version:", best_version)
     else:
         print(best_version)
