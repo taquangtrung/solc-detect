@@ -10,9 +10,7 @@ import argparse
 
 import toml
 
-import solc_detect
-
-from . import lib
+from solc_detect import solc_detect
 
 
 def configure_cli_arguments():
@@ -75,11 +73,11 @@ def main():
         arg_parser.print_usage()
         arg_parser.exit()
 
-    pragma_version = lib.find_pragma_solc_version(input_file)
+    pragma_version = solc_detect.find_pragma_solc_version(input_file)
     if args.verbose:
         print("Detected pragmas:", pragma_version)
 
-    best_version = lib.find_best_solc_version_for_pragma(pragma_version)
+    best_version = solc_detect.find_best_solc_version_for_pragma(pragma_version)
     if args.verbose:
         print("Best version:", best_version)
     else:

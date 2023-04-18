@@ -9,7 +9,7 @@ from typing import List, Union
 import nodesemver
 import semantic_version
 
-from . import pragma_parser
+from solc_detect import pragma_parser
 
 # from semantic_version import NpmSpec, Version
 
