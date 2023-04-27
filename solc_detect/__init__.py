@@ -16,3 +16,7 @@ def find_best_solc_version(input_file):
 def find_best_solc_version_for_pragma(pragma_version):
     """Find the best version of Solc compiler for pragma."""
     return solc_detect.find_best_solc_version_for_pragma(pragma_version)
+
+def find_all_best_solc_versions_for_pragma(pragma_version):
+    """Find all the best versions of Solc compiler for pragma."""
+    return solc_detect.find_all_best_solc_versions_for_pragma(pragma_version)

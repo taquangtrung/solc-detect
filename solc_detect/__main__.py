@@ -38,6 +38,16 @@ def configure_cli_arguments():
         help="",
     )
 
+    # Quiet mode, print only the best version.
+    arg_parser.add_argument(
+        "-a",
+        "--all-best-verions",
+        dest="all_best_versions",
+        action="store_true",
+        default=False,
+        help="Finding all best versions for each minor Solc version.",
+    )
+
     # Help
     arg_parser.add_argument(
         "-h",
@@ -73,15 +83,23 @@ def main():
         arg_parser.print_usage()
         arg_parser.exit()
 
-    pragma_version = solc_detect.find_pragma_solc_version(input_file)
+    pragmas = solc_detect.find_pragma_solc_version(input_file)
     if not args.quiet:
-        print("Detected pragmas:", pragma_version)
+        print("Detected pragmas:", pragmas)
 
-    best_version = solc_detect.find_best_solc_version_for_pragma(pragma_version)
-    if not args.quiet:
-        print("Best version:", best_version)
+    if args.all_best_versions:
+        best_version = solc_detect.find_all_best_solc_versions_for_pragma(pragmas)
+        if not args.quiet:
+            print("All best versions:", best_version)
+        else:
+            print(best_version)
+        return
     else:
-        print(best_version)
+        best_version = solc_detect.find_best_solc_version_for_pragma(pragmas)
+        if not args.quiet:
+            print("Best version:", best_version)
+        else:
+            print(best_version)
 
 
 if __name__ == "__main__":

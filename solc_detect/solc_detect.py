@@ -51,16 +51,39 @@ def find_best_solc_version_for_pragma(pragma_versions) -> Optional[str]:
             # First, use `semantic_version` module to find the best version
             all_semvers = [semantic_version.Version(v) for v in group]
             version_spec = semantic_version.NpmSpec(constraint)
-            if (best_version := version_spec.select(all_semvers)):
+            if best_version := version_spec.select(all_semvers):
                 return str(best_version)
         except ValueError:
             # If errors occur, then use `node_semver` module to find it
-            if (best_version := nodesemver.max_satisfying(group, constraint)):
+            if best_version := nodesemver.max_satisfying(group, constraint):
                 return str(best_version)
 
     # Unable to find a suitable version
     return None
 
+def find_all_best_solc_versions_for_pragma(pragma_versions) -> List[str]:
+    """Find multiple best versions of Solc compiler for a pragma version. These
+    versions are the latest patches of each version satisfying the required
+    pragmas.
+    """
+    version_groups = enumerate_and_group_solc_version_by_minor_version()
+    constraint = " ".join(pragma_versions)
+
+    best_versions: List[str] = []
+    for group in version_groups:
+        try:
+            # First, use `semantic_version` module to find the best version
+            all_semvers = [semantic_version.Version(v) for v in group]
+            version_spec = semantic_version.NpmSpec(constraint)
+            if best_version := version_spec.select(all_semvers):
+                best_versions.append(str(best_version))
+        except ValueError:
+            # If errors occur, then use `node_semver` module to find it
+            if best_version := nodesemver.max_satisfying(group, constraint):
+                best_versions.append(str(best_version))
+
+    # Return all best versions
+    return best_versions
 
 def find_best_solc_version(input_file) -> Optional[str]:
     """Find the best version of Solc compiler for a smart contract. This version
@@ -68,3 +91,12 @@ def find_best_solc_version(input_file) -> Optional[str]:
     pragmas."""
     pragma_versions = find_pragma_solc_version(input_file)
     return find_best_solc_version_for_pragma(pragma_versions)
+
+
+def find_all_best_solc_versions(input_file) -> List[str]:
+    """Find multiple best versions of Solc compiler for a smart contract. These
+    versions are the latest patches of each version satisfying the required
+    pragmas.
+    """
+    pragma_versions = find_pragma_solc_version(input_file)
+    return find_all_best_solc_versions(pragma_versions)
