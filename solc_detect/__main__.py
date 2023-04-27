@@ -83,12 +83,12 @@ def main():
         arg_parser.print_usage()
         arg_parser.exit()
 
-    pragmas = solc_detect.find_pragma_solc_version(input_file)
-    if not args.quiet:
-        print("Detected pragmas:", pragmas)
+    pragmas = solc_detect.find_pragma_version_string(input_file, args.quiet)
 
     if args.all_best_versions:
-        best_version = solc_detect.find_all_best_solc_versions_for_pragma(pragmas)
+        best_version = solc_detect.find_all_best_solc_versions_for_pragma(
+            pragmas
+        )
         if not args.quiet:
             print("All best versions:", best_version)
         else:

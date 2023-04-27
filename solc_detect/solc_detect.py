@@ -4,6 +4,7 @@
 Module define some utility variables and functions.
 """
 
+import re
 from typing import List, Optional
 
 import nodesemver
@@ -33,10 +34,35 @@ def enumerate_and_group_solc_version_by_minor_version() -> List[List[str]]:
     return solc_versions
 
 
-def find_pragma_solc_version(input_file) -> List[str]:
-    """Find the Solidity version declared in pragma of a smart contract."""
-    pragma_versions = pragma_parser.parse_solidity_version(input_file)
-    return pragma_versions
+def find_pragma_version_string(
+    input_file: str, quiet: bool = False
+) -> List[str]:
+    """Find the pragma Solidity version strings in smart contract."""
+    pragma_strs = pragma_parser.parse_solidity_version(input_file)
+    if not quiet:
+        print("Detected raw pragmas:", pragma_strs)
+
+    pragma_strs = normalize_pragmas(pragma_strs)
+    if not quiet:
+        print("Normalized pragmas:", pragma_strs)
+
+    return pragma_strs
+
+
+def normalize_pragmas(pragma_strs: List[str]) -> List[str]:
+    """Normalize pragma strings so that `semantic_version` and `nodesemver` can
+    process them."""
+
+    new_pragmas = []
+    for pragma in pragma_strs:
+        # Delete unneeded whitespace
+        pragma = re.sub("\\. *", ".", pragma)
+        pragma = re.sub(" *\\.", ".", pragma)
+        # Simplify .00 => .0
+        pragma = re.sub("\\. *00", ".0", pragma)
+        new_pragmas.append(pragma)
+
+    return new_pragmas
 
 
 def find_best_solc_version_for_pragma(pragma_versions) -> Optional[str]:
@@ -60,6 +86,7 @@ def find_best_solc_version_for_pragma(pragma_versions) -> Optional[str]:
 
     # Unable to find a suitable version
     return None
+
 
 def find_all_best_solc_versions_for_pragma(pragma_versions) -> List[str]:
     """Find multiple best versions of Solc compiler for a pragma version. These
@@ -85,12 +112,13 @@ def find_all_best_solc_versions_for_pragma(pragma_versions) -> List[str]:
     # Return all best versions
     return best_versions
 
+
 def find_best_solc_version(input_file) -> Optional[str]:
     """Find the best version of Solc compiler for a smart contract. This version
     is the latest patch of the lowest minor version satisfying the required
     pragmas."""
-    pragma_versions = find_pragma_solc_version(input_file)
-    return find_best_solc_version_for_pragma(pragma_versions)
+    pragma_strs = find_pragma_version_string(input_file)
+    return find_best_solc_version_for_pragma(pragma_strs)
 
 
 def find_all_best_solc_versions(input_file) -> List[str]:
@@ -98,5 +126,5 @@ def find_all_best_solc_versions(input_file) -> List[str]:
     versions are the latest patches of each version satisfying the required
     pragmas.
     """
-    pragma_versions = find_pragma_solc_version(input_file)
+    pragma_versions = find_pragma_version_string(input_file)
     return find_all_best_solc_versions(pragma_versions)

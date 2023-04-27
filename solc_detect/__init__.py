@@ -5,7 +5,7 @@ from solc_detect import solc_detect
 
 def find_pragma_solc_version(input_file):
     """Find the Solidity version declared in pragma of a smart contract."""
-    return solc_detect.find_pragma_solc_version(input_file)
+    return solc_detect.find_pragma_version_string(input_file)
 
 
 def find_best_solc_version(input_file):
