@@ -35,7 +35,7 @@ def enumerate_and_group_solc_version_by_minor_version() -> List[List[str]]:
 
 
 def find_pragma_version_string(
-    input_file: str, quiet: bool = False
+    input_file: str, quiet: bool = True
 ) -> List[str]:
     """Find the pragma Solidity version strings in smart contract."""
     pragma_strs = pragma_parser.parse_solidity_version(input_file)
